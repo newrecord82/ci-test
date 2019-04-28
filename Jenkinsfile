@@ -36,9 +36,9 @@ def checkout () {
    context="continuous-integration/jenkins/"
    context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
     checkout scm
-    pullRequest.createStatus('SUCCESS', context, '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+    // pullRequest.createStatus('SUCCESS', context, '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
     // setGitHubPullRequestStatus context: 'continuous-integration/jenkins/checkout', message: 'Succes checkout...', state: 'SUCCESS'
-  //  setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
+   setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
   // updateBuildStatus(context, 'Checking-out-completed', 'SUCCESS')
 }
 
@@ -125,6 +125,27 @@ void updateBuildStatus(context, desc, state) {
   """
 }
 
+def updateGithubCommitStatus(build) {
+  // workaround https://issues.jenkins-ci.org/browse/JENKINS-38674
+  repoUrl = getRepoURL()
+  commitSha = getCommitSha()
+ 
+  step([
+    $class: 'GitHubCommitStatusSetter',
+    reposSource: [$class: "ManuallyEnteredRepositorySource", url: repoUrl],
+    commitShaSource: [$class: "ManuallyEnteredShaSource", sha: commitSha],
+    errorHandlers: [[$class: 'ShallowAnyErrorHandler']],
+    statusResultSource: [
+      $class: 'ConditionalStatusResultSource',
+      results: [
+        [$class: 'BetterThanOrEqualBuildResult', result: 'SUCCESS', state: 'SUCCESS', message: description],
+        [$class: 'BetterThanOrEqualBuildResult', result: 'FAILURE', state: 'FAILURE', message: description],
+        [$class: 'AnyBuildResult', state: 'FAILURE', message: 'Loophole']
+      ]
+    ]
+  ])
+}
+
 def setBuildStatus(contextName, message, state) {
 
   repoUrl = getRepoURL()
@@ -136,7 +157,8 @@ def setBuildStatus(contextName, message, state) {
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: contextName],
       reposSource: [$class: "ManuallyEnteredRepositorySource", url: repoUrl],
       commitShaSource: [$class: "ManuallyEnteredShaSource", sha: commitSha],
-      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      // errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      errorHandlers: [[$class: 'ShallowAnyErrorHandler']],
       statusResultSource: [
         $class: "ConditionalStatusResultSource",
         results: [
