@@ -95,7 +95,7 @@ void setBuildStatus(contextName, message, state) {
   step([
       $class: "GitHubCommitStatusSetter",
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: contextName],
-      reposSource: [$class: "ManuallyEnteredRepositorySource", url: repoUrl],
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/newrecord82/ci-test"],
       // commitShaSource: [$class: "ManuallyEnteredShaSource", sha: commitSha],
       errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
       statusResultSource: [
