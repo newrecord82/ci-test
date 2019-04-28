@@ -2,23 +2,10 @@
 
 node {
     checkout()
-    testLog()
     clean()
     unitTest()
     // sonarServer()
     buildApk()
-}
-
-def testLog() {
-  stage 'Test log'
-  context="-- Test context --"
-  if (env.CHANGE_ID) {
-    pullRequest.createStatus('success', 'Context-Jenkins', '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
-  }
-  
-  // setBuildStatus("${context}", 'Test log success.', 'UNSTABLE')
-  // setGitHubPullRequestStatus context: 'Test context', message: 'Succes cleanning...', state: 'SUCCESS'
-  // updateBuildStatus(context, 'Test-log...', 'SUCCESS')
 }
 
 def isPRMergeBuild() {
@@ -27,14 +14,7 @@ def isPRMergeBuild() {
 
 def checkout () {
     stage 'Checkout code'
-   context="continuous-integration/jenkins/"
-   context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
     checkout scm
-    pullRequest.createStatus('success', context, 'This commit looks good.', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
-    // pullRequest.createStatus('SUCCESS', context, '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
-    // setGitHubPullRequestStatus context: 'continuous-integration/jenkins/checkout', message: 'Succes checkout...', state: 'SUCCESS'
-  //  setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
-  // updateBuildStatus(context, 'Checking-out-completed', 'SUCCESS')
 }
 
 
@@ -45,12 +25,8 @@ def unitTest() {
         sh './gradlew testDebugUnitTest'
         junit '**/TEST-*.xml'
        if (currentBuild.result == 'UNSTABLE') {
-          //  updateBuildStatus(context, 'Unit-Test-result.', 'UNSTABLE')
-          //  setBuildStatus("${context}", 'Unit Test result.', 'UNSTABLE')
           pullRequest.createStatus('failure', context, 'This tests is fail.', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
        } else {
-          //  updateBuildStatus(context, 'Unit-Test-result.', 'STABLE')
-          //  setBuildStatus("${context}", 'Unit Test result.', 'STABLE')
           pullRequest.createStatus('success', context, 'This tests is good.', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
        }
     }
@@ -61,8 +37,6 @@ def clean() {
         sh './make_prerun.sh'
         sh './gradlew clean'
        def context = "Clean repository..."
-      //  setBuildStatus ("${context}", "Code clean...", 'SUCCESS')
-        // updateBuildStatus(context, 'Code-clean...', 'SUCCESS')
         pullRequest.createStatus('success', context, 'Code clean...OK!', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
     }
 }
@@ -104,65 +78,4 @@ def getRepoURL() {
 def getCommitSha() {
   sh "git rev-parse HEAD > .git/current-commit"
   return readFile(".git/current-commit").trim()
-}
-
-void updateBuildStatus(context, desc, state) {
-  // PENDING, SUCCESS, FAILURE, UNSTABLE, STABLE
-  repoUrl = getRepoURL()
-  commitSha = getCommitSha()
-  target_url = "http://192.168.1.128:8080/job/ci-test/job/PR-3"
-  contentType = "Content-Type: application/json"
-  accessToken ="aa926c29a611b27f2759f9113fc9912fd1460201"
-  tmpUrl = "https://api.github.com/repos/newrecord82/ci-test"
-  // body = "{\\\"context\\\": \\\"${context}\\\", \\\"description\\\": \\\"${desc}\\\", \\\"state\\\": \\\"${state}\\\", \\\"target_url\\\": \\\"${target_url}\\\"}"
-  // sh "echo ${body}"
-  // sh "curl \"${repoUrl}/statuses/${commitSha}?access_token=${accessToken}\" -H \"${contentType}\" -X POST -d \"${body}\""
-  sh """
-    curl '${tmpUrl}/statuses/${commitSha}?access_token=${accessToken}' \
-    -H '${contentType}' \
-    -X POST \
-    -d '{\"context\": \"${context}\", \"description\": \"${desc}\", \"state\": \"${state}\", \"target_url\": \"${target_url}\"}'
-  """
-}
-
-def updateGithubCommitStatus(build) {
-  // workaround https://issues.jenkins-ci.org/browse/JENKINS-38674
-  repoUrl = getRepoURL()
-  commitSha = getCommitSha()
- 
-  step([
-    $class: 'GitHubCommitStatusSetter',
-    reposSource: [$class: "ManuallyEnteredRepositorySource", url: repoUrl],
-    commitShaSource: [$class: "ManuallyEnteredShaSource", sha: commitSha],
-    errorHandlers: [[$class: 'ShallowAnyErrorHandler']],
-    statusResultSource: [
-      $class: 'ConditionalStatusResultSource',
-      results: [
-        [$class: 'BetterThanOrEqualBuildResult', result: 'SUCCESS', state: 'SUCCESS', message: description],
-        [$class: 'BetterThanOrEqualBuildResult', result: 'FAILURE', state: 'FAILURE', message: description],
-        [$class: 'AnyBuildResult', state: 'FAILURE', message: 'Loophole']
-      ]
-    ]
-  ])
-}
-
-def setBuildStatus(contextName, message, state) {
-
-  repoUrl = getRepoURL()
-  commitSha = getCommitSha()
-  sh "echo ${repoUrl}"
-  sh "echo ${commitSha}"
-  step([
-      $class: "GitHubCommitStatusSetter",
-      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: contextName],
-      reposSource: [$class: "ManuallyEnteredRepositorySource", url: repoUrl],
-      commitShaSource: [$class: "ManuallyEnteredShaSource", sha: commitSha],
-      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-      statusResultSource: [
-        $class: "ConditionalStatusResultSource",
-        results: [
-            [$class: "AnyBuildResult", message: message, state: state]
-          ]
-      ]
-  ])
 }
