@@ -106,8 +106,8 @@ void updateBuildStatus(context, desc, state) {
   // sh "curl \"${repoUrl}/statuses/${commitSha}?access_token=${accessToken}\" -H \"${contentType}\" -X POST -d \"${body}\""
   sh """
     curl '${repoUrl}/statuses/${commitSha}?access_token=${accessToken}' \
-    -H '${contentType}'
-    -X POST
+    -H '${contentType}' \
+    -X POST \
     -d \"{\\\"context\\\": \\\"${context}\\\", \\\"description\\\": \\\"${desc}\\\", \\\"state\\\": \\\"${state}\\\", \\\"target_url\\\": \\\"${target_url}\\\"}\"
   """
 }
