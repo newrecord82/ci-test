@@ -12,7 +12,7 @@ node {
 def testLog() {
   stage 'Test log'
   context="-- Test context --"
-  commitStatus = pullRequest.createStatus('SUCCESS', 'Context-Jenkins', '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+  pullRequest.createStatus('PENDING', 'Context-Jenkins', '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
   // setBuildStatus("${context}", 'Test log success.', 'UNSTABLE')
   // setGitHubPullRequestStatus context: 'Test context', message: 'Succes cleanning...', state: 'SUCCESS'
   // updateBuildStatus(context, 'Test-log...', 'SUCCESS')
