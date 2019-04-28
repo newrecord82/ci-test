@@ -2,10 +2,10 @@
 
 node {
     checkout()
-    clean()
-    unitTest()
+    // clean()
+    // unitTest()
     // sonarServer()
-    buildApk()
+    // buildApk()
 }
 
 def isPRMergeBuild() {
@@ -14,7 +14,7 @@ def isPRMergeBuild() {
 
 def checkout () {
     stage 'Checkout code'
-   context="jenkins/"
+   context="continuous-integration/jenkins/"
    context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
     checkout scm
    setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
