@@ -26,6 +26,7 @@ def checkout () {
    context="continuous-integration/jenkins/"
    context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
     checkout scm
+    setGitHubPullRequestStatus context: 'continuous-integration/jenkins/checkout', message: 'Succes checkout...', state: 'SUCCESS'
   //  setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
   // updateBuildStatus(context, 'Checking-out-completed', 'SUCCESS')
 }
