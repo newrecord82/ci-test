@@ -102,6 +102,7 @@ void updateBuildStatus(context, desc, state) {
   contentType = "Content-Type: application/json"
   accessToken ="5dc5be9f03fc677709de555986d495d599a985a2"
   body = "{\"context\": \"${context}\", \"description\": \"${desc}\", \"state\": \"${state}\", \"target_url\": \"${target_url}\"}"
+  sh "echo ${body}"
   sh "curl \"${repoUrl}/statuses/${commitSha}?access_token=${accessToken}\" -H \"${contentType}\" -X POST -d \"${body}\""
 }
 
