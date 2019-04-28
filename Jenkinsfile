@@ -21,7 +21,7 @@ def checkout () {
 def unitTest() {
     stage('Unit Tests') {
        def context = "Unit Tests"
-       setBuildStatus("${context}", 'Unit Test running...', 'pending')
+       pullRequest.createStatus('pending', context, 'Unit Test running...', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
         sh './gradlew testDebugUnitTest'
         junit '**/TEST-*.xml'
        if (currentBuild.result == 'UNSTABLE') {
@@ -64,7 +64,6 @@ def sonarServer() {
 def buildApk() {
     stage('Build Apk') {
         sh './gradlew assembleDebug'
-        // updateBuildStatus("Build apk", 'Apk-build...', 'SUCCESS')
         def context = "Build Apk"
         pullRequest.createStatus('success', context, 'Build complete', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
     }
