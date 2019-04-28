@@ -4,7 +4,7 @@ node {
     checkout()
     clean()
     unitTest()
-    sonarServer()
+    // sonarServer()
     buildApk()
 }
 
@@ -14,24 +14,24 @@ def isPRMergeBuild() {
 
 def checkout () {
     stage 'Checkout code'
-//    context="continuous-integration/jenkins/"
-//    context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
+   context="continuous-integration/jenkins/"
+   context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
     checkout scm
-//    setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
+   setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
 }
 
 
 def unitTest() {
     stage('Unit Tests') {
-//        def context = "Unit Tests"
-//        setBuildStatus("${context}", 'Unit Test running...', 'PENDING')
+       def context = "Unit Tests"
+       setBuildStatus("${context}", 'Unit Test running...', 'PENDING')
         sh './gradlew testDebugUnitTest'
         junit '**/TEST-*.xml'
-//        if (currentBuild.result == 'UNSTABLE') {
-//            setBuildStatus("${context}", 'Unit Test result.', 'UNSTABLE')
-//        } else {
-//            setBuildStatus("${context}", 'Unit Test result.', 'STABLE')
-//        }
+       if (currentBuild.result == 'UNSTABLE') {
+           setBuildStatus("${context}", 'Unit Test result.', 'UNSTABLE')
+       } else {
+           setBuildStatus("${context}", 'Unit Test result.', 'STABLE')
+       }
     }
 }
 
@@ -39,8 +39,8 @@ def clean() {
     stage('Clean') {
         sh './make_prerun.sh'
         sh './gradlew clean'
-//        def context = "Clean repository..."
-//        setBuildStatus ("${context}", "Code clean...", 'SUCCESS')
+       def context = "Clean repository..."
+       setBuildStatus ("${context}", "Code clean...", 'SUCCESS')
     }
 }
 
