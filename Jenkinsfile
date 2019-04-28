@@ -12,6 +12,15 @@ node {
 def testLog() {
   stage 'Test log'
   context="-- Test context --"
+  try {
+      echo 'Hello World'
+  } catch (err) {
+      // CHANGE_ID is set only for pull requests, so it is safe to access the pullRequest global variable
+      if (env.CHANGE_ID) {
+          pullRequest.addLabel('Build Failed')
+      }
+      throw err
+  }
   pullRequest.createStatus('PENDING', 'Context-Jenkins', '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
   // setBuildStatus("${context}", 'Test log success.', 'UNSTABLE')
   // setGitHubPullRequestStatus context: 'Test context', message: 'Succes cleanning...', state: 'SUCCESS'
