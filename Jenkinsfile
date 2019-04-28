@@ -13,10 +13,7 @@ def testLog() {
   stage 'Test log'
   context="-- Test context --"
   if (env.CHANGE_ID) {
-    echo "************* CHANGE ID is ${env.CHANGE_ID} ****************"
     pullRequest.createStatus('success', 'Context-Jenkins', '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
-  } else {
-    echo '************* CHANGE ID is empty ****************'
   }
   
   // setBuildStatus("${context}", 'Test log success.', 'UNSTABLE')
@@ -33,9 +30,10 @@ def checkout () {
    context="continuous-integration/jenkins/"
    context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
     checkout scm
+    pullRequest.createStatus('success', context, 'This commit looks good.', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
     // pullRequest.createStatus('SUCCESS', context, '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
     // setGitHubPullRequestStatus context: 'continuous-integration/jenkins/checkout', message: 'Succes checkout...', state: 'SUCCESS'
-   setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
+  //  setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
   // updateBuildStatus(context, 'Checking-out-completed', 'SUCCESS')
 }
 
@@ -43,15 +41,17 @@ def checkout () {
 def unitTest() {
     stage('Unit Tests') {
        def context = "Unit Tests"
-       setBuildStatus("${context}", 'Unit Test running...', 'PENDING')
+       setBuildStatus("${context}", 'Unit Test running...', 'pending')
         sh './gradlew testDebugUnitTest'
         junit '**/TEST-*.xml'
        if (currentBuild.result == 'UNSTABLE') {
           //  updateBuildStatus(context, 'Unit-Test-result.', 'UNSTABLE')
           //  setBuildStatus("${context}", 'Unit Test result.', 'UNSTABLE')
+          pullRequest.createStatus('failure', context, 'This tests is fail.', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
        } else {
           //  updateBuildStatus(context, 'Unit-Test-result.', 'STABLE')
           //  setBuildStatus("${context}", 'Unit Test result.', 'STABLE')
+          pullRequest.createStatus('success', context, 'This tests is good.', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
        }
     }
 }
@@ -60,9 +60,10 @@ def clean() {
     stage('Clean') {
         sh './make_prerun.sh'
         sh './gradlew clean'
-      //  def context = "Clean repository..."
+       def context = "Clean repository..."
       //  setBuildStatus ("${context}", "Code clean...", 'SUCCESS')
         // updateBuildStatus(context, 'Code-clean...', 'SUCCESS')
+        pullRequest.createStatus('success', context, 'Code clean...OK!', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
     }
 }
 
@@ -90,6 +91,8 @@ def buildApk() {
     stage('Build Apk') {
         sh './gradlew assembleDebug'
         // updateBuildStatus("Build apk", 'Apk-build...', 'SUCCESS')
+        def context = "Build Apk"
+        pullRequest.createStatus('success', context, 'Build complete', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
     }
 }
 
