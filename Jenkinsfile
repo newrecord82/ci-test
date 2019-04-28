@@ -3,7 +3,7 @@
 node {
     checkout()
     testLog()
-    // clean()
+    clean()
     // unitTest()
     // sonarServer()
     // buildApk()
@@ -13,7 +13,7 @@ def testLog() {
   stage 'Test log'
   sh "echo ${env.RUN_DISPLAY_URL}"
   context="-- Test context --"
-  setBuildStatus("${context}", 'Test log success.', 'SUCCESS')
+  setBuildStatus("${context}", 'Test log success.', 'UNSTABLE')
 }
 
 def isPRMergeBuild() {
