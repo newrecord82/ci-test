@@ -2,10 +2,18 @@
 
 node {
     checkout()
+    testLog()
     // clean()
     // unitTest()
     // sonarServer()
     // buildApk()
+}
+
+def testLog() {
+  stage 'Test log'
+  sh "echo ${env.RUN_DISPLAY_URL}"
+  context="-- Test context --"
+  setBuildStatus("${context}", 'Test log success.', 'SUCCESS')
 }
 
 def isPRMergeBuild() {
@@ -89,7 +97,8 @@ void setBuildStatus(contextName, message, state) {
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: contextName],
       reposSource: [$class: "ManuallyEnteredRepositorySource", url: repoUrl],
       commitShaSource: [$class: "ManuallyEnteredShaSource", sha: commitSha],
-      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      // errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      errorHandlers: [[$class: 'ShallowAnyErrorHandler']],
       statusBackrefSource: [$class: "ManuallyEnteredBackrefSource", backref: "${env.RUN_DISPLAY_URL}"],
       statusResultSource: [
         $class: "ConditionalStatusResultSource",
