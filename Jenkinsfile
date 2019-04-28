@@ -12,7 +12,8 @@ node {
 def testLog() {
   stage 'Test log'
   context="-- Test context --"
-  setBuildStatus("${context}", 'Test log success.', 'UNSTABLE')
+  commitStatus = pullRequest.createStatus('SUCCESS', 'Context-Jenkins', '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+  // setBuildStatus("${context}", 'Test log success.', 'UNSTABLE')
   // setGitHubPullRequestStatus context: 'Test context', message: 'Succes cleanning...', state: 'SUCCESS'
   // updateBuildStatus(context, 'Test-log...', 'SUCCESS')
 }
@@ -26,7 +27,7 @@ def checkout () {
    context="continuous-integration/jenkins/"
    context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
     checkout scm
-    setGitHubPullRequestStatus context: 'continuous-integration/jenkins/checkout', message: 'Succes checkout...', state: 'SUCCESS'
+    // setGitHubPullRequestStatus context: 'continuous-integration/jenkins/checkout', message: 'Succes checkout...', state: 'SUCCESS'
   //  setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
   // updateBuildStatus(context, 'Checking-out-completed', 'SUCCESS')
 }
