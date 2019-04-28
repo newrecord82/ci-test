@@ -37,7 +37,7 @@ def unitTest() {
 
 def clean() {
     stage('Clean') {
-        // sh './make_prerun.sh'
+        sh './make_prerun.sh'
         sh './gradlew clean'
 //        def context = "Clean repository..."
 //        setBuildStatus ("${context}", "Code clean...", 'SUCCESS')
