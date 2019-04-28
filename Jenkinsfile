@@ -90,6 +90,7 @@ void setBuildStatus(contextName, message, state) {
       reposSource: [$class: "ManuallyEnteredRepositorySource", url: repoUrl],
       commitShaSource: [$class: "ManuallyEnteredShaSource", sha: commitSha],
       errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusBackrefSource: [$class: "ManuallyEnteredBackrefSource", backref: "${env.RUN_DISPLAY_URL}"],
       statusResultSource: [
         $class: "ConditionalStatusResultSource",
         results: [
