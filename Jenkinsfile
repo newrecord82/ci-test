@@ -25,7 +25,7 @@ def unitTest() {
     stage('Unit Tests') {
 //        def context = "Unit Tests"
 //        setBuildStatus("${context}", 'Unit Test running...', 'PENDING')
-        sh './gradlew testProdDebugUnitTest'
+        sh './gradlew testDebugUnitTest'
         junit '**/TEST-*.xml'
 //        if (currentBuild.result == 'UNSTABLE') {
 //            setBuildStatus("${context}", 'Unit Test result.', 'UNSTABLE')
@@ -66,7 +66,7 @@ def sonarServer() {
 
 def buildApk() {
     stage('Build Apk') {
-        sh './gradlew assembleProdDebug -Pliapp=false'
+        sh './gradlew assembleDebug'
     }
 }
 
