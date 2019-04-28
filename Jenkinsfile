@@ -11,7 +11,6 @@ node {
 
 def testLog() {
   stage 'Test log'
-  sh "echo ${env.RUN_DISPLAY_URL}"
   context="-- Test context --"
   // setBuildStatus("${context}", 'Test log success.', 'UNSTABLE')
   setGitHubPullRequestStatus context: 'Test context', message: 'Succes cleanning...', state: 'SUCCESS'
@@ -48,8 +47,8 @@ def clean() {
     stage('Clean') {
         sh './make_prerun.sh'
         sh './gradlew clean'
-       def context = "Clean repository..."
-       setBuildStatus ("${context}", "Code clean...", 'SUCCESS')
+      //  def context = "Clean repository..."
+      //  setBuildStatus ("${context}", "Code clean...", 'SUCCESS')
     }
 }
 
