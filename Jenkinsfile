@@ -4,17 +4,17 @@ node {
     checkout()
     testLog()
     clean()
-    // unitTest()
+    unitTest()
     // sonarServer()
-    // buildApk()
+    buildApk()
 }
 
 def testLog() {
   stage 'Test log'
   context="-- Test context --"
-  sh "echo ${env.GITHUB_TOKEN}"
   // setBuildStatus("${context}", 'Test log success.', 'UNSTABLE')
-  setGitHubPullRequestStatus context: 'Test context', message: 'Succes cleanning...', state: 'SUCCESS'
+  // setGitHubPullRequestStatus context: 'Test context', message: 'Succes cleanning...', state: 'SUCCESS'
+  updateBuildStatus(context, 'Test log...', 'SUCCESS')
 }
 
 def isPRMergeBuild() {
@@ -27,6 +27,7 @@ def checkout () {
    context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
     checkout scm
   //  setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
+  updateBuildStatus(context, 'Checking out completed', 'SUCCESS')
 }
 
 
@@ -37,9 +38,11 @@ def unitTest() {
         sh './gradlew testDebugUnitTest'
         junit '**/TEST-*.xml'
        if (currentBuild.result == 'UNSTABLE') {
-           setBuildStatus("${context}", 'Unit Test result.', 'UNSTABLE')
+           updateBuildStatus(context, 'Unit Test result.', 'UNSTABLE')
+          //  setBuildStatus("${context}", 'Unit Test result.', 'UNSTABLE')
        } else {
-           setBuildStatus("${context}", 'Unit Test result.', 'STABLE')
+           updateBuildStatus(context, 'Unit Test result.', 'STABLE')
+          //  setBuildStatus("${context}", 'Unit Test result.', 'STABLE')
        }
     }
 }
@@ -50,6 +53,7 @@ def clean() {
         sh './gradlew clean'
       //  def context = "Clean repository..."
       //  setBuildStatus ("${context}", "Code clean...", 'SUCCESS')
+        updateBuildStatus(context, 'Code clean...', 'SUCCESS')
     }
 }
 
@@ -76,6 +80,7 @@ def sonarServer() {
 def buildApk() {
     stage('Build Apk') {
         sh './gradlew assembleDebug'
+        updateBuildStatus("Build apk", 'Apk build...', 'SUCCESS')
     }
 }
 
@@ -95,8 +100,9 @@ void updateBuildStatus(context, desc, status) {
   commitSha = getCommitSha()
   target_url = "http://192.168.1.128:8080/job/ci-test/job/PR-3"
   contentType = "Content-Type: application/json"
+  accessToken ="5dc5be9f03fc677709de555986d495d599a985a2"
   body = "{\"context\": \"${context}\", \"description\": \"${desc}\", \"status\": \"${status}\", \"target_url\": \"${target_url}\"}"
-  sh "curl \"${repoUrl}/statuses/${commitSha}?access_token=${env.GITHUB_TOKEN}\" -H \"${contentType}\" -X POST -d \"${body}\""
+  sh "curl \"${repoUrl}/statuses/${commitSha}?access_token=${accessToken}\" -H \"${contentType}\" -X POST -d \"${body}\""
 }
 
 void setBuildStatus(contextName, message, state) {
