@@ -96,7 +96,7 @@ void updateBuildStatus(context, desc, status) {
   target_url = "http://192.168.1.128:8080/job/ci-test/job/PR-3"
   contentType = "Content-Type: application/json"
   body = "{\"context\": \"${context}\", \"description\": \"${desc}\", \"status\": \"${status}\", \"target_url\": \"${target_url}\"}"
-  sh "curl \"${repoUrl}/statuses/${commitSha}?access_token=${env.GITHUB_TOKEN}\" -H \"${contentType}\" -X POST -d \"${body}\"
+  sh "curl \"${repoUrl}/statuses/${commitSha}?access_token=${env.GITHUB_TOKEN}\" -H \"${contentType}\" -X POST -d \"${body}\""
 }
 
 void setBuildStatus(contextName, message, state) {
