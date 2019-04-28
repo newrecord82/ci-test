@@ -13,7 +13,7 @@ def testLog() {
   stage 'Test log'
   sh "echo ${env.RUN_DISPLAY_URL}"
   context="-- Test context --"
-  setBuildStatus("${context}", 'Test log success.', 'SUCCESS')
+  // setBuildStatus("${context}", 'Test log success.', 'SUCCESS')
 }
 
 def isPRMergeBuild() {
@@ -25,7 +25,7 @@ def checkout () {
    context="continuous-integration/jenkins/"
    context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
     checkout scm
-   setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
+  //  setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
 }
 
 
