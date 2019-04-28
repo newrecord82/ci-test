@@ -103,7 +103,7 @@ void updateBuildStatus(context, desc, state) {
   commitSha = getCommitSha()
   target_url = "http://192.168.1.128:8080/job/ci-test/job/PR-3"
   contentType = "Content-Type: application/json"
-  accessToken ="4f75e075700a3f116472275495d16d0c27f76800"
+  accessToken ="aa926c29a611b27f2759f9113fc9912fd1460201"
   tmpUrl = "https://api.github.com/repos/newrecord82/ci-test"
   // body = "{\\\"context\\\": \\\"${context}\\\", \\\"description\\\": \\\"${desc}\\\", \\\"state\\\": \\\"${state}\\\", \\\"target_url\\\": \\\"${target_url}\\\"}"
   // sh "echo ${body}"
