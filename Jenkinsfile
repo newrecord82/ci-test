@@ -14,7 +14,7 @@ def testLog() {
   context="-- Test context --"
   if (env.CHANGE_ID) {
     echo "************* CHANGE ID is ${env.CHANGE_ID} ****************"
-    pullRequest.createStatus('SUCCESS', 'Context-Jenkins', '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+    pullRequest.createStatus('success', 'Context-Jenkins', '-DESC-', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
   } else {
     echo '************* CHANGE ID is empty ****************'
   }
