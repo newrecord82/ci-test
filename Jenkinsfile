@@ -93,7 +93,7 @@ void setBuildStatus(contextName, message, state) {
   repoUrl = getRepoURL()
   commitSha = getCommitSha()
   step([
-      $class: "GitHubCommitStatusSetter",
+      $class: "GitHubCommitStatus",
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: contextName],
       reposSource: [$class: "ManuallyEnteredRepositorySource", url: repoUrl],
       commitShaSource: [$class: "ManuallyEnteredShaSource", sha: commitSha],
