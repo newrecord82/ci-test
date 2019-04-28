@@ -13,7 +13,7 @@ def testLog() {
   stage 'Test log'
   sh "echo ${env.RUN_DISPLAY_URL}"
   context="-- Test context --"
-  setBuildStatus("${context}", 'Test log success.', 'FAILURE')
+  setBuildStatus("${context}", 'Test log success.', 'SUCCESS')
 }
 
 def isPRMergeBuild() {
@@ -93,13 +93,11 @@ void setBuildStatus(contextName, message, state) {
   repoUrl = getRepoURL()
   commitSha = getCommitSha()
   step([
-      $class: "GitHubCommitStatus",
+      $class: "GitHubCommitStatusSetter",
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: contextName],
       reposSource: [$class: "ManuallyEnteredRepositorySource", url: repoUrl],
-      commitShaSource: [$class: "ManuallyEnteredShaSource", sha: commitSha],
-      // errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-      errorHandlers: [[$class: 'ShallowAnyErrorHandler']],
-      statusBackrefSource: [$class: "ManuallyEnteredBackrefSource", backref: "${env.RUN_DISPLAY_URL}"],
+      // commitShaSource: [$class: "ManuallyEnteredShaSource", sha: commitSha],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
       statusResultSource: [
         $class: "ConditionalStatusResultSource",
         results: [
