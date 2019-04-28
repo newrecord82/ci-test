@@ -14,7 +14,7 @@ def testLog() {
   context="-- Test context --"
   // setBuildStatus("${context}", 'Test log success.', 'UNSTABLE')
   // setGitHubPullRequestStatus context: 'Test context', message: 'Succes cleanning...', state: 'SUCCESS'
-  updateBuildStatus(context, 'Test log...', 'SUCCESS')
+  updateBuildStatus(context, 'Test-log...', 'SUCCESS')
 }
 
 def isPRMergeBuild() {
@@ -27,7 +27,7 @@ def checkout () {
    context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
     checkout scm
   //  setBuildStatus ("${context}", 'Checking out completed', 'SUCCESS')
-  updateBuildStatus(context, 'Checking out completed', 'SUCCESS')
+  updateBuildStatus(context, 'Checking-out-completed', 'SUCCESS')
 }
 
 
@@ -38,10 +38,10 @@ def unitTest() {
         sh './gradlew testDebugUnitTest'
         junit '**/TEST-*.xml'
        if (currentBuild.result == 'UNSTABLE') {
-           updateBuildStatus(context, 'Unit Test result.', 'UNSTABLE')
+           updateBuildStatus(context, 'Unit-Test-result.', 'UNSTABLE')
           //  setBuildStatus("${context}", 'Unit Test result.', 'UNSTABLE')
        } else {
-           updateBuildStatus(context, 'Unit Test result.', 'STABLE')
+           updateBuildStatus(context, 'Unit-Test-result.', 'STABLE')
           //  setBuildStatus("${context}", 'Unit Test result.', 'STABLE')
        }
     }
@@ -53,7 +53,7 @@ def clean() {
         sh './gradlew clean'
       //  def context = "Clean repository..."
       //  setBuildStatus ("${context}", "Code clean...", 'SUCCESS')
-        updateBuildStatus(context, 'Code clean...', 'SUCCESS')
+        updateBuildStatus(context, 'Code-clean...', 'SUCCESS')
     }
 }
 
@@ -80,7 +80,7 @@ def sonarServer() {
 def buildApk() {
     stage('Build Apk') {
         sh './gradlew assembleDebug'
-        updateBuildStatus("Build apk", 'Apk build...', 'SUCCESS')
+        updateBuildStatus("Build apk", 'Apk-build...', 'SUCCESS')
     }
 }
 
