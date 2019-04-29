@@ -14,12 +14,13 @@ def isPRMergeBuild() {
 
 def checkout () {
     stage('Checkout code') {
+      updateCommitStatus("continuous-integration/jenkins/branch", 'This pull request checkout.', 'pending')
       checkout scm
       // statuses = pullRequest.getStatuses()
       // statuses.each {
       //   sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
       // }
-      updateCommitStatus("continuous-integration/jenkins/pr-merge", 'This commit looks good.', 'success')
+      // updateCommitStatus("continuous-integration/jenkins/pr-merge", 'This commit looks good.', 'success')
       updateCommitStatus("continuous-integration/jenkins/branch", 'This commit looks good.', 'success')
     }
 }
@@ -40,6 +41,7 @@ def unitTest() {
 
 def clean() {
     stage('Clean') {
+        updateCommitStatus(context, 'This step is pending.', 'pending')
         sh './make_prerun.sh'
         sh './gradlew clean'
         def context = "Clean repository..."
