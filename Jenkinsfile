@@ -18,6 +18,7 @@ def checkout () {
       statuses = pullRequest.getStatuses()
       statuses.each {
         sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
+        it.remove()
       }
     }
 }
