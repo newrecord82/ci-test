@@ -15,10 +15,10 @@ def isPRMergeBuild() {
 def checkout () {
     stage('Checkout code') {
       checkout scm
-      statuses = pullRequest.getStatuses()
-      statuses.each {
-        sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
-      }
+      // statuses = pullRequest.getStatuses()
+      // statuses.each {
+      //   sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
+      // }
     }
 }
 
