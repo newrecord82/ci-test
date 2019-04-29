@@ -2,7 +2,6 @@
 
 node {
     checkout()
-    // test()
     clean()
     // unitTest()
     // sonarServer()
@@ -20,15 +19,9 @@ def checkout () {
       // statuses.each {
       //   sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
       // }
+      updateCommitStatus("continuous-integration/jenkins/branch", 'This commit looks good.', 'success')
     }
 }
-
-def test () {
-  stage('TEST') {
-    githubPRStatusPublisher buildMessage: message(failureMsg: githubPRMessage('Can\'t set status; build failed.'), successMsg: githubPRMessage('Can\'t set status; build succeeded.')), statusMsg: githubPRMessage('${GITHUB_PR_COND_REF} run ended'), unstableAs: 'SUCCESS'
-  }
-}
-
 
 def unitTest() {
     stage('Unit Tests') {
@@ -94,8 +87,8 @@ def getCommitSha() {
 def updateCommitStatus(context, description, state) {
     if (env.CHANGE_ID) {
       pullRequest.createStatus(state, context, description, "${env.JOB_URL}")
-      sh "echo ---------> SUCCESS: ${env.JOB_URL} <---------"
+      sh "echo ---------> SUCCESS[${context}]: ${env.JOB_URL} <---------"
     } else {
-      sh 'echo ---------> ERROR: empty CHANGE_ID <---------'
+      sh "echo ---------> ERROR[${context}]: empty CHANGE_ID <---------"
     }
 }
