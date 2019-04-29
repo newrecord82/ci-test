@@ -25,11 +25,7 @@ def checkout () {
 
 def test () {
   stage('TEST') {
-    githubPRStatusPublisher buildMessage: 
-      message(failureMsg: githubPRMessage('Can\'t set status; build failed.'), 
-      successMsg: githubPRMessage('Can\'t set status; build succeeded.')), 
-      statusMsg: githubPRMessage('${GITHUB_PR_COND_REF} run ended'), 
-      unstableAs: 'SUCCESS'
+    githubPRStatusPublisher buildMessage: message(failureMsg: githubPRMessage('Can\'t set status; build failed.'), successMsg: githubPRMessage('Can\'t set status; build succeeded.')), statusMsg: githubPRMessage('${GITHUB_PR_COND_REF} run ended'), unstableAs: 'SUCCESS'
   }
 }
 
