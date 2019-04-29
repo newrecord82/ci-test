@@ -8,10 +8,6 @@ node {
     buildApk()
 }
 
-def isPRMergeBuild() {
-    return (env.BRANCH_NAME ==~ /^PR-\d+$/)
-}
-
 def checkout () {
     stage('Checkout code') {
       // updateCommitStatus("continuous-integration/jenkins/branch", 'This pull request checkout.', 'pending')
