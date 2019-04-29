@@ -92,14 +92,10 @@ def getCommitSha() {
 }
 
 def updateCommitStatus(context, description, state) {
-  post {
-    script {
-      if (env.CHANGE_ID) {
-        pullRequest.createStatus(state, context, description, "${env.JOB_URL}")
-        sh "echo ---------> SUCCESS: ${env.JOB_URL} <---------"
-      } else {
-        sh 'echo ---------> ERROR: empty CHANGE_ID <---------'
-      }
+    if (env.CHANGE_ID) {
+      pullRequest.createStatus(state, context, description, "${env.JOB_URL}")
+      sh "echo ---------> SUCCESS: ${env.JOB_URL} <---------"
+    } else {
+      sh 'echo ---------> ERROR: empty CHANGE_ID <---------'
     }
-  }
 }
