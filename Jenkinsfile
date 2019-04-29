@@ -16,7 +16,9 @@ def checkout () {
     stage('Checkout code') {
       checkout scm
       statuses = pullRequest.getStatuses()
-      sh "echo ${statuses}"
+      statuses.each {
+        sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
+      }
     }
 }
 
