@@ -89,6 +89,6 @@ def getCommitSha() {
 
 def updateCommitStatus(context, description, state) {
     if (env.CHANGE_ID) {
-      pullRequest.createStatus(state, context, description, "${env.JOB_URL}")
+      pullRequest.createStatus(status: state, context: context, description: description, targetUrl: "${env.JOB_URL}")
     }
 }
