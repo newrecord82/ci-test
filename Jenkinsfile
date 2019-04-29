@@ -2,10 +2,10 @@
 
 node {
     checkout()
-    clean()
-    unitTest()
+    // clean()
+    // unitTest()
     // sonarServer()
-    buildApk()
+    // buildApk()
 }
 
 def isPRMergeBuild() {
