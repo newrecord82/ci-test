@@ -46,11 +46,13 @@ def unitTest() {
 
 def clean() {
     stage('Clean') {
-        updateCommitStatus(context, 'This step is pending.', 'pending')
-        sh './make_prerun.sh'
-        sh './gradlew clean'
-        def context = "Clean repository..."
-        updateCommitStatus(context, 'This step is passed.', 'success')
+      def context = "Clean repository..."
+      updateCommitStatus(context, 'This step is pending.', 'pending')
+
+      sh './make_prerun.sh'
+      sh './gradlew clean'
+      
+      updateCommitStatus(context, 'This step is passed.', 'success')
     }
 }
 
@@ -93,5 +95,6 @@ def getCommitSha() {
 }
 
 def updateCommitStatus(title, desc, state) {
-    pullRequest.createStatus(status: "${state}", context: "${title}", description: "${desc}", targetUrl: "${env.JOB_URL}")
+    pullRequest.createStatus(status: state, context: title, description: desc, targetUrl: "${env.JOB_URL}")
+    // pullRequest.createStatus(status: 'success', context: 'CONTEXT-TEST', description: 'DESCRIPTION-TEST', targetUrl: "${env.JOB_URL}")
 }
