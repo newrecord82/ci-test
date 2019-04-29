@@ -2,7 +2,7 @@
 
 node {
     checkout()
-    test()
+    // test()
     // clean()
     // unitTest()
     // sonarServer()
