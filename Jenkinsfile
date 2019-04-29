@@ -11,8 +11,9 @@ node {
 def checkout () {
     stage('Checkout code') {
       // updateCommitStatus("continuous-integration/jenkins/branch", 'This pull request checkout.', 'pending')
-      context = "continuous-integration/jenkins/"
-      context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
+      // context = "continuous-integration/jenkins/"
+      // context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
+      context = "continuous-integration/jenkins/branch"
       checkout scm
       updateCommitStatus(context, 'Checking out completed', 'success')
       // statuses = pullRequest.getStatuses()
