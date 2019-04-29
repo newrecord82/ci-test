@@ -16,12 +16,17 @@ def checkout () {
     stage('Checkout code') {
       updateCommitStatus("continuous-integration/jenkins/branch", 'This pull request checkout.', 'pending')
       checkout scm
+      
       // statuses = pullRequest.getStatuses()
       // statuses.each {
       //   sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
       // }
       // updateCommitStatus("continuous-integration/jenkins/pr-merge", 'This commit looks good.', 'success')
       updateCommitStatus("continuous-integration/jenkins/branch", 'This commit looks good.', 'success')
+
+      for (status in pullRequest.statuses) {
+        echo "Commit: ${pullRequest.head}, State: ${status.state}, Context: ${status.context}, URL: ${status.targetUrl}"
+      }
     }
 }
 
@@ -87,8 +92,6 @@ def getCommitSha() {
   return readFile(".git/current-commit").trim()
 }
 
-def updateCommitStatus(context, description, state) {
-    if (env.CHANGE_ID) {
-      pullRequest.createStatus(status: state, context: context, description: description, targetUrl: "${env.JOB_URL}")
-    }
+def updateCommitStatus(title, desc, state) {
+    pullRequest.createStatus(status: state, context: title, description: desc, targetUrl: "${env.JOB_URL}")
 }
