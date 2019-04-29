@@ -85,6 +85,6 @@ def updateCommitStatus(context, description, state) {
   if (env.CHANGE_ID) {
     pullRequest.createStatus(state, context, description, 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
   } else {
-
+    sh 'echo ---------> ERROR: empty CHANGE_ID <---------'
   }
 }
