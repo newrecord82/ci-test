@@ -2,7 +2,7 @@
 
 node {
     checkout()
-    // clean()
+    clean()
     // unitTest()
     // sonarServer()
     // buildApk()
@@ -93,5 +93,5 @@ def getCommitSha() {
 }
 
 def updateCommitStatus(title, desc, state) {
-    pullRequest.createStatus(status: state, context: title, description: desc, targetUrl: "${env.JOB_URL}")
+    pullRequest.createStatus(status: "${state}", context: "${title}", description: "${desc}", targetUrl: "${env.JOB_URL}")
 }
