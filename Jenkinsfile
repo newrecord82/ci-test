@@ -2,7 +2,7 @@
 
 node {
     checkout()
-    // clean()
+    clean()
     // unitTest()
     // sonarServer()
     // buildApk()
@@ -36,8 +36,8 @@ def clean() {
     stage('Clean') {
         sh './make_prerun.sh'
         sh './gradlew clean'
-       def context = "Clean repository..."
-        pullRequest.createStatus('success', context, 'Code clean...OK!', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+        def context = "Clean repository..."
+        updateCommitStatus(context, 'This step is passed.', 'success')
     }
 }
 
@@ -77,4 +77,14 @@ def getRepoURL() {
 def getCommitSha() {
   sh "git rev-parse HEAD > .git/current-commit"
   return readFile(".git/current-commit").trim()
+}
+
+def updateCommitStatus(context, description, state) {
+  sh 'echo ---------> JOB URL <---------'
+  sh "echo ${env.JOB_URL}"
+  if (env.CHANGE_ID) {
+    pullRequest.createStatus(state, context, description, 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+  } else {
+
+  }
 }
