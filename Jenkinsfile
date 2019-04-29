@@ -24,9 +24,9 @@ def checkout () {
       // updateCommitStatus("continuous-integration/jenkins/pr-merge", 'This commit looks good.', 'success')
       // updateCommitStatus("continuous-integration/jenkins/branch", 'This commit looks good.', 'success')
 
-      for (status in pullRequest.statuses) {
-        echo "Commit: ${pullRequest.head}, State: ${status.state}, Context: ${status.context}, URL: ${status.targetUrl}"
-      }
+      // for (status in pullRequest.statuses) {
+      //   echo "Commit: ${pullRequest.head}, State: ${status.state}, Context: ${status.context}, URL: ${status.targetUrl}"
+      // }
     }
 }
 
