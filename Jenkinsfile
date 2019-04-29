@@ -3,20 +3,19 @@
 node {
     checkout()
     clean()
-    // unitTest()
+    unitTest()
     // sonarServer()
-    // buildApk()
-}
-
-def isPRMergeBuild() {
-    return (env.BRANCH_NAME ==~ /^PR-\d+$/)
+    buildApk()
 }
 
 def checkout () {
     stage('Checkout code') {
       // updateCommitStatus("continuous-integration/jenkins/branch", 'This pull request checkout.', 'pending')
+      // context = "continuous-integration/jenkins/"
+      // context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
+      context = "continuous-integration/jenkins/branch"
       checkout scm
-      
+      updateCommitStatus(context, 'Checking out completed', 'success')
       // statuses = pullRequest.getStatuses()
       // statuses.each {
       //   sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
@@ -33,13 +32,16 @@ def checkout () {
 def unitTest() {
     stage('Unit Tests') {
        def context = "Unit Tests"
-       pullRequest.createStatus('pending', context, 'Unit Test running...', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+      //  pullRequest.createStatus('pending', context, 'Unit Test running...', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+       updateCommitStatus(context, 'Unit Test running...', 'pending')
         sh './gradlew testDebugUnitTest'
         junit '**/TEST-*.xml'
        if (currentBuild.result == 'UNSTABLE') {
-          pullRequest.createStatus('failure', context, 'This tests is fail.', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+          // pullRequest.createStatus('failure', context, 'This tests is fail.', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+          updateCommitStatus(context, 'Unit Test failure...', 'failure')
        } else {
-          pullRequest.createStatus('success', context, 'This tests is good.', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+          // pullRequest.createStatus('success', context, 'This tests is good.', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+          updateCommitStatus(context, 'Unit Test success...', 'success')
        }
     }
 }
@@ -78,10 +80,16 @@ def sonarServer() {
 
 def buildApk() {
     stage('Build Apk') {
-        sh './gradlew assembleDebug'
-        def context = "Build Apk"
-        pullRequest.createStatus('success', context, 'Build complete', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
+      def context = "Build Apk"
+      updateCommitStatus(context, 'Build apk pending...', 'pending')
+      sh './gradlew assembleDebug'
+      updateCommitStatus(context, 'Build apk complete...', 'success')
+      // pullRequest.createStatus('success', context, 'Build complete', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
     }
+}
+
+def isPRMergeBuild() {
+    return (env.BRANCH_NAME ==~ /^PR-\d+$/)
 }
 
 def getRepoURL() {
