@@ -15,8 +15,10 @@ def isPRMergeBuild() {
 def checkout () {
     stage('Checkout code') {
       // updateCommitStatus("continuous-integration/jenkins/branch", 'This pull request checkout.', 'pending')
+      context = "continuous-integration/jenkins/"
+      context += isPRMergeBuild()?"pr-merge/checkout":"branch/checkout"
       checkout scm
-      
+      updateCommitStatus(context, 'Checking out completed', 'success')
       // statuses = pullRequest.getStatuses()
       // statuses.each {
       //   sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
@@ -87,6 +89,10 @@ def buildApk() {
       updateCommitStatus(context, 'Build apk complete...', 'success')
       // pullRequest.createStatus('success', context, 'Build complete', 'http://192.168.1.128:8080/job/ci-test/job/PR-4')
     }
+}
+
+def isPRMergeBuild() {
+    return (env.BRANCH_NAME ==~ /^PR-\d+$/)
 }
 
 def getRepoURL() {
