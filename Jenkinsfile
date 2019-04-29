@@ -19,6 +19,7 @@ def checkout () {
       // statuses.each {
       //   sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
       // }
+      updateCommitStatus("continuous-integration/jenkins/pr-merge", 'This commit looks good.', 'success')
       updateCommitStatus("continuous-integration/jenkins/branch", 'This commit looks good.', 'success')
     }
 }
@@ -87,8 +88,5 @@ def getCommitSha() {
 def updateCommitStatus(context, description, state) {
     if (env.CHANGE_ID) {
       pullRequest.createStatus(state, context, description, "${env.JOB_URL}")
-      sh "echo ---------> SUCCESS[${context}]: ${env.JOB_URL} <---------"
-    } else {
-      sh "echo ---------> ERROR[${context}]: empty CHANGE_ID <---------"
     }
 }
