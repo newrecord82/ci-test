@@ -2,7 +2,7 @@
 
 node {
     checkout()
-    clean()
+    // clean()
     // unitTest()
     // sonarServer()
     // buildApk()
@@ -14,7 +14,7 @@ def isPRMergeBuild() {
 
 def checkout () {
     stage('Checkout code') {
-      updateCommitStatus("continuous-integration/jenkins/branch", 'This pull request checkout.', 'pending')
+      // updateCommitStatus("continuous-integration/jenkins/branch", 'This pull request checkout.', 'pending')
       checkout scm
       
       // statuses = pullRequest.getStatuses()
@@ -22,7 +22,7 @@ def checkout () {
       //   sh "echo context: ${it.getContext()}, desc: ${it.getDescription()}, state: ${it.getState()}"
       // }
       // updateCommitStatus("continuous-integration/jenkins/pr-merge", 'This commit looks good.', 'success')
-      updateCommitStatus("continuous-integration/jenkins/branch", 'This commit looks good.', 'success')
+      // updateCommitStatus("continuous-integration/jenkins/branch", 'This commit looks good.', 'success')
 
       for (status in pullRequest.statuses) {
         echo "Commit: ${pullRequest.head}, State: ${status.state}, Context: ${status.context}, URL: ${status.targetUrl}"
