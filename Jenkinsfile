@@ -3,7 +3,7 @@
 node {
     checkout()
     // test()
-    // clean()
+    clean()
     // unitTest()
     // sonarServer()
     // buildApk()
@@ -96,6 +96,7 @@ def updateCommitStatus(context, description, state) {
     script {
       if (env.CHANGE_ID) {
         pullRequest.createStatus(state, context, description, "${env.JOB_URL}")
+        sh "echo ---------> SUCCESS: ${env.JOB_URL} <---------"
       } else {
         sh 'echo ---------> ERROR: empty CHANGE_ID <---------'
       }
