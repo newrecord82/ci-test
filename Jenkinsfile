@@ -15,6 +15,8 @@ def isPRMergeBuild() {
 def checkout () {
     stage('Checkout code') {
       checkout scm
+      statuses = pullRequest.getStatuses()
+      sh "echo ${statuses}"
     }
 }
 
