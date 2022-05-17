@@ -1,3 +1,5 @@
 # ci-test
 Jenkins test
-Hello~!!!!
+fun test() {
+  println();
+}
